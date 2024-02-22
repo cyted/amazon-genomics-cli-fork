@@ -6,6 +6,7 @@ import { BucketOperations } from "../../common/BucketOperations";
 import { IRole } from "aws-cdk-lib/aws-iam";
 import { Construct } from "constructs";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
+import { ComputeResourceType } from "../../util/instance-types";
 
 export interface BatchConstructProps {
   /**
@@ -44,10 +45,10 @@ export class BatchConstruct extends Construct {
     const { vpc, contextParameters, createSpotBatch, createOnDemandBatch, subnets, computeEnvImage } = props;
     const { artifactBucketName, outputBucketName, readBucketArns = [], readWriteBucketArns = [] } = contextParameters;
     if (createSpotBatch) {
-      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, subnets, contextParameters, "SPOT", computeEnvImage);
+      this.batchSpot = this.renderBatch("TaskBatchSpot", vpc, subnets, contextParameters, ComputeResourceType.SPOT, computeEnvImage);
     }
     if (createOnDemandBatch) {
-      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, "ON_DEMAND", computeEnvImage);
+      this.batchOnDemand = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, ComputeResourceType.EC2, computeEnvImage);
     }
 
     const artifactBucket = BucketOperations.importBucket(this, "ArtifactBucket", artifactBucketName);
@@ -68,7 +69,7 @@ export class BatchConstruct extends Construct {
     vpc: IVpc,
     subnets: SubnetSelection,
     appParams: ContextAppParameters,
-    computeType?: string,
+    computeType?: ComputeResourceType,
     computeEnvImage?: MachineImage
   ): Batch {
     return new Batch(this, id, {

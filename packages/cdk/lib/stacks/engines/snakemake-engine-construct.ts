@@ -16,6 +16,7 @@ import { BucketOperations } from "../../common/BucketOperations";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
 import { IFunction } from "aws-cdk-lib/aws-lambda";
 import { EcsMachineImage } from "aws-cdk-lib/aws-batch";
+import { ComputeResourceType } from "../../util/instance-types";
 
 export class SnakemakeEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -31,8 +32,8 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     const { vpc, subnets, contextParameters, computeEnvImage } = props;
     const params = props.contextParameters;
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, "FARGATE");
-    const workerComputeType = contextParameters.requestSpotInstances ? "SPOT" : "ON_DEMAND";
+    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, ComputeResourceType.FARGATE);
+    const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.EC2;
     this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType, computeEnvImage);
 
     // Generate the engine that will run snakemake on batch
@@ -167,7 +168,7 @@ export class SnakemakeEngineConstruct extends EngineConstruct {
     vpc: IVpc,
     subnets: SubnetSelection,
     appParams: ContextAppParameters,
-    computeType?: string,
+    computeType?: ComputeResourceType,
     computeEnvImage?: EcsMachineImage
   ): Batch {
     return new Batch(this, id, {

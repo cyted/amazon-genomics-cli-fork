@@ -16,7 +16,7 @@ const NEXTFLOW_IMAGE_DESIGNATION = "nextflow";
 export class NextflowEngine extends Engine {
   readonly headJobDefinition: EcsJobDefinition;
   private readonly cpu = 4;
-  private readonly memory = Size.mebibytes(4096);
+  private readonly memory = Size.mebibytes(4096); // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.Size.html#static-mebibytesamount
 
   constructor(scope: Construct, id: string, props: NextflowEngineProps) {
     super(scope, id);

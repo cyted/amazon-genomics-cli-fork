@@ -15,6 +15,7 @@ import { EngineOptions } from "../../types";
 import { Construct } from "constructs";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
 import { EcsMachineImage } from "aws-cdk-lib/aws-batch";
+import { ComputeResourceType } from "../../util/instance-types";
 
 export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;
@@ -31,8 +32,8 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     const params = props.contextParameters;
     const rootDirS3Uri = params.getEngineBucketPath();
 
-    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, "FARGATE");
-    const workerComputeType = contextParameters.requestSpotInstances ? "SPOT" : "ON_DEMAND";
+    this.batchHead = this.renderBatch("HeadBatch", vpc, subnets, contextParameters, ComputeResourceType.FARGATE);
+    const workerComputeType = contextParameters.requestSpotInstances ? ComputeResourceType.SPOT : ComputeResourceType.EC2;
     this.batchWorkers = this.renderBatch("TaskBatch", vpc, subnets, contextParameters, workerComputeType, computeEnvImage);
 
     this.batchHead.role.attachInlinePolicy(new HeadJobBatchPolicy(this, "HeadJobBatchPolicy"));
@@ -134,7 +135,7 @@ export class MiniwdlEngineConstruct extends EngineConstruct {
     vpc: IVpc,
     subnets: SubnetSelection,
     appParams: ContextAppParameters,
-    computeType?: string,
+    computeType?: ComputeResourceType,
     computeEnvImage?: EcsMachineImage
   ): Batch {
     return new Batch(this, id, {

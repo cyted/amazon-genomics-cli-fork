@@ -2,7 +2,7 @@ import { Fn, Names, Stack } from "aws-cdk-lib";
 import { IComputeEnvironment, IJobQueue, JobQueue, FargateComputeEnvironment, ManagedEc2EcsComputeEnvironment, EcsMachineImage } from "aws-cdk-lib/aws-batch";
 import { InstanceType, IVpc, LaunchTemplate, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { Grant, IGrantable, IManagedPolicy, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
-import { getInstanceTypesForBatch } from "../util/instance-types";
+import { ComputeResourceType, getInstanceTypesForBatch } from "../util/instance-types";
 import { batchArn, ec2Arn } from "../util";
 import { APP_NAME, APP_TAG_KEY, TAGGED_RESOURCE_TYPES } from "../constants";
 import { CfnLaunchTemplateProps } from "aws-cdk-lib/aws-ec2/lib/ec2.generated";
@@ -28,7 +28,7 @@ export interface ComputeOptions {
    *
    * @default ON_DEMAND
    */
-  computeType?: string;
+  computeType?: ComputeResourceType;
   /**
    * The types of EC2 instances that may be launched in the compute environment.
    *
@@ -89,7 +89,7 @@ export interface BatchProps extends ComputeOptions {
   workflowOrchestrator?: string;
 }
 
-const defaultComputeType = "EC2";
+const defaultComputeType = ComputeResourceType.EC2;
 
 export class Batch extends Construct {
   // This is the role that the backing instances use, not the role that batch jobs run as.
@@ -121,9 +121,9 @@ export class Batch extends Construct {
     });
   }
 
-  private renderRole(computeType?: string, awsPolicyNames?: string[]): IRole {
+  private renderRole(computeType?: ComputeResourceType, awsPolicyNames?: string[]): IRole {
     const awsPolicies = awsPolicyNames?.map((policyName) => ManagedPolicy.fromAwsManagedPolicyName(policyName));
-    if (computeType == "FARGATE" || computeType == "FARGATE_SPOT") {
+    if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
       return this.renderEcsRole(awsPolicies);
     }
     return this.renderEc2Role(awsPolicies);
@@ -179,7 +179,7 @@ export class Batch extends Construct {
 
   private renderComputeEnvironment(options: ComputeOptions): IComputeEnvironment {
     const computeType = options.computeType || defaultComputeType;
-    if (computeType == "FARGATE" || computeType == "FARGATE_SPOT") {
+    if (computeType == ComputeResourceType.FARGATE || computeType == ComputeResourceType.FARGATE_SPOT) {
       return new FargateComputeEnvironment(this, "ComputeEnvironment", {
         vpc: options.vpc as IVpc,
         vpcSubnets: options.subnets,

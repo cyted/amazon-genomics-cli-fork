@@ -14,7 +14,7 @@ export class EngineJobDefinition extends EcsJobDefinition {
       container: new EcsEc2ContainerDefinition(scope, "containerDefn", {
         ...props.container,
         cpu: props.container.cpu || 1,
-        memory: props.container.memory || Size.mebibytes(2048),
+        memory: props.container.memory || Size.mebibytes(2048), // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.Size.html#static-mebibytesamount
         environment: {
           AWS_METADATA_SERVICE_TIMEOUT: "10",
           AWS_METADATA_SERVICE_NUM_ATTEMPTS: "10",

@@ -19,7 +19,7 @@ export class SnakemakeEngine extends Engine {
   readonly headJobDefinition: EcsJobDefinition;
   private readonly volumeName = "efs";
   private readonly cpu = 4;
-  private readonly memory = Size.mebibytes(4096);
+  private readonly memory = Size.mebibytes(4096); // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.Size.html#static-mebibytesamount
   public readonly fsap: AccessPoint;
   public readonly fileSystem: FileSystem;
 

@@ -18,7 +18,7 @@ const MINIWDL_IMAGE_DESIGNATION = "miniwdl";
 export class MiniWdlEngine extends Engine {
   readonly headJobDefinition: EcsJobDefinition;
   private readonly cpu = 4;
-  private readonly memory = Size.mebibytes(4096);
+  private readonly memory = Size.mebibytes(4096); // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.Size.html#static-mebibytesamount
   private readonly volumeName = "efs";
   readonly fileSystem: FileSystem;
 
