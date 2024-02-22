@@ -1,8 +1,8 @@
 import { RoleProps } from "aws-cdk-lib/aws-iam";
 import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { EcsMachineImage } from "aws-cdk-lib/aws-batch";
 import { ContextAppParameters } from "../env";
 import { Size } from "aws-cdk-lib";
-import { EcsMachineImage } from "aws-cdk-lib/aws-batch";
 
 export type PolicyOptions = Pick<RoleProps, "inlinePolicies" | "managedPolicies">;
 

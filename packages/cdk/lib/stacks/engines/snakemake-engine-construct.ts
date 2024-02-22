@@ -4,10 +4,12 @@ import { EngineOptions } from "../../types";
 import { ApiProxy, Batch } from "../../constructs";
 import { EngineOutputs, EngineConstruct } from "./engine-construct";
 import { ILogGroup } from "aws-cdk-lib/aws-logs";
+import { ComputeResourceType } from "../../util/instance-types";
 import { ENGINE_SNAKEMAKE } from "../../constants";
 import { Construct } from "constructs";
 import { Effect, IRole, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
+import { EcsMachineImage } from "aws-cdk-lib/aws-batch";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
 import { BatchPolicies } from "../../roles/policies/batch-policies";
@@ -15,8 +17,6 @@ import { Bucket, IBucket } from "aws-cdk-lib/aws-s3";
 import { BucketOperations } from "../../common/BucketOperations";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
 import { IFunction } from "aws-cdk-lib/aws-lambda";
-import { EcsMachineImage } from "aws-cdk-lib/aws-batch";
-import { ComputeResourceType } from "../../util/instance-types";
 
 export class SnakemakeEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;

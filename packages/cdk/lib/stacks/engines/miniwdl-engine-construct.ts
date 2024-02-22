@@ -7,6 +7,7 @@ import { ILogGroup } from "aws-cdk-lib/aws-logs";
 import { MiniWdlEngine } from "../../constructs/engines/miniwdl/miniwdl-engine";
 import { IVpc, SubnetSelection } from "aws-cdk-lib/aws-ec2";
 import { ENGINE_MINIWDL } from "../../constants";
+import { ComputeResourceType } from "../../util/instance-types";
 import { BucketOperations } from "../../common/BucketOperations";
 import { ContextAppParameters } from "../../env";
 import { HeadJobBatchPolicy } from "../../roles/policies/head-job-batch-policy";
@@ -15,7 +16,6 @@ import { EngineOptions } from "../../types";
 import { Construct } from "constructs";
 import { LaunchTemplateData } from "../../constructs/launch-template-data";
 import { EcsMachineImage } from "aws-cdk-lib/aws-batch";
-import { ComputeResourceType } from "../../util/instance-types";
 
 export class MiniwdlEngineConstruct extends EngineConstruct {
   public readonly apiProxy: ApiProxy;

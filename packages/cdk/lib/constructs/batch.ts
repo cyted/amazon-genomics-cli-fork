@@ -89,7 +89,7 @@ export interface BatchProps extends ComputeOptions {
   workflowOrchestrator?: string;
 }
 
-const defaultComputeType = ComputeResourceType.EC2;
+const defaultComputeType = ComputeResourceType.EC2; // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_batch.CfnComputeEnvironment.ComputeResourcesProperty.html#:~:text=resources%20are%20launched.-,type,-string
 
 export class Batch extends Construct {
   // This is the role that the backing instances use, not the role that batch jobs run as.

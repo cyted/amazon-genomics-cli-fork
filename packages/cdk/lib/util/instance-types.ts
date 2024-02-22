@@ -1,5 +1,6 @@
 import { InstanceType, InstanceArchitecture } from "aws-cdk-lib/aws-ec2";
 
+// https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_batch.CfnComputeEnvironment.ComputeResourcesProperty.html#:~:text=resources%20are%20launched.-,type,-string
 export enum ComputeResourceType {
   EC2 = "EC2",
   SPOT = "SPOT",
